@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Mis Citas{% endblock %}
+{% block content %}
+<h2 class="mb-3">Mis Citas</h2>
+<div class="card">
+    <table class="table table-hover mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha</th><th>Hora</th><th>Paciente / Médico</th><th>Motivo</th><th>Estado</th><th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in citas %}
+            <tr>
+                <td>{{ c.fecha }}</td>
+                <td>{{ c.hora|time:"H:i" }}</td>
+                <td>
+                    {% if user.paciente %}
+                        Dr(a). {{ c.medico.nombre_completo }}
+                    {% else %}
+                        {{ c.paciente }}
+                    {% endif %}
+                </td>
+                <td>{{ c.motivo|truncatechars:40 }}</td>
+                <td><span class="badge bg-secondary">{{ c.get_estado_display }}</span></td>
+                <td>
+                    {% if c.estado not in 'completada,cancelada' %}
+                    <a href="{% url 'cancelar_cita' c.pk %}" class="btn btn-sm btn-outline-danger">Cancelar</a>
+                    {% endif %}
+                    {% if user.medico and c.estado != 'completada' %}
+                    <a href="{% url 'registrar_consulta' c.pk %}" class="btn btn-sm btn-success">Registrar</a>
+                    {% endif %}
+                    <a href="{% url 'historial_paciente' c.paciente.pk %}" class="btn btn-sm btn-outline-primary">Historial</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center text-muted">No hay citas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

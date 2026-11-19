@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Cancelar Cita{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h3>Cancelar Cita</h3>
+            <p><strong>Paciente:</strong> {{ cita.paciente }}</p>
+            <p><strong>Médico:</strong> {{ cita.medico }}</p>
+            <p><strong>Fecha/Hora:</strong> {{ cita.fecha }} {{ cita.hora|time:"H:i" }}</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">{{ form.notas_cancelacion.label }}</label>
+                    {{ form.notas_cancelacion }}
+                    {% if form.notas_cancelacion.errors %}<div class="text-danger">{{ form.notas_cancelacion.errors }}</div>{% endif %}
+                </div>
+                <button type="submit" class="btn btn-danger">Confirmar Cancelación</button>
+                <a href="{% url 'mis_citas' %}" class="btn btn-outline-secondary">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Reportes{% endblock %}
+{% block content %}
+<h2>Reportes y Estadísticas</h2>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Citas por Especialidad</div>
+            <ul class="list-group list-group-flush">
+                {% for item in citas_por_especialidad %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ item.medico__especialidad__nombre|default:"Sin especialidad" }}
+                    <span class="badge bg-primary">{{ item.total }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Sin datos</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Médicos con más consultas</div>
+            <ul class="list-group list-group-flush">
+                {% for item in medicos_mas_consultas %}
+                <li class="list-group-item d-flex justify-content-between">
+                    Dr(a). {{ item.cita__medico__user__first_name }} {{ item.cita__medico__user__last_name }}
+                    <span class="badge bg-success">{{ item.total }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Sin datos</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Pacientes frecuentes</div>
+            <ul class="list-group list-group-flush">
+                {% for item in pacientes_frecuentes %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ item.paciente__apellidos }}, {{ item.paciente__nombres }} ({{ item.paciente__dni }})
+                    <span class="badge bg-info">{{ item.total }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Sin datos</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Historial Clínico{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <h2>Historial Clínico</h2>
+    <div class="card p-3 mb-3">
+        <div class="row">
+            <div class="col-md-6">
+                <strong>{{ paciente.apellidos }}, {{ paciente.nombres }}</strong><br>
+                DNI: {{ paciente.dni }} | Edad: {{ paciente.edad }} años | {{ paciente.get_tipo_display }}
+            </div>
+            <div class="col-md-6">
+                Código UNCP: {{ paciente.codigo_uncp }}<br>
+                Email: {{ paciente.email }}<br>
+                <span class="text-danger">Alergias: {{ paciente.alergias }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Consultas Médicas</h4>
+{% for cons in consultas %}
+<div class="card mb-2">
+    <div class="card-body">
+        <h6>{{ cons.fecha_registro|date:"d/m/Y H:i" }} - Dr(a). {{ cons.cita.medico.nombre_completo }}</h6>
+        <p><strong>Diagnóstico:</strong> {{ cons.diagnostico }}</p>
+        <p><strong>Tratamiento:</strong> {{ cons.tratamiento }}</p>
+        {% if cons.medicamentos %}<p><strong>Medicamentos:</strong> {{ cons.medicamentos }}</p>{% endif %}
+        {% if cons.proxima_cita %}<p><strong>Próxima cita:</strong> {{ cons.proxima_cita }}</p>{% endif %}
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">No hay consultas registradas.</p>
+{% endfor %}
+
+<h4 class="mt-4">Historial de Citas</h4>
+<table class="table table-sm">
+    <thead><tr><th>Fecha</th><th>Hora</th><th>Médico</th><th>Estado</th><th>Motivo</th></tr></thead>
+    <tbody>
+    {% for c in citas %}
+    <tr>
+        <td>{{ c.fecha }}</td>
+        <td>{{ c.hora|time:"H:i" }}</td>
+        <td>{{ c.medico.nombre_completo }}</td>
+        <td>{{ c.get_estado_display }}</td>
+        <td>{{ c.motivo|truncatechars:50 }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
